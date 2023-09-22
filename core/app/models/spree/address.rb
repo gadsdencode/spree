@@ -11,7 +11,7 @@ module Spree
     end
 
     if Rails::VERSION::STRING >= '6.1'
-      serialize :preferences, Hash, default: {}
+      serialize :preferences, type: Hash, coder: YAML, default: {}
     end
 
     NO_ZIPCODE_ISO_CODES ||= [

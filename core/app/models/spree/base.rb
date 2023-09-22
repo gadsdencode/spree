@@ -1,6 +1,6 @@
 class Spree::Base < ApplicationRecord
   include Spree::Preferences::Preferable
-  serialize :preferences, Hash
+  serialize :preferences, type: Hash, coder: YAML
 
   include Spree::RansackableAttributes
   include Spree::TranslatableResourceScopes
