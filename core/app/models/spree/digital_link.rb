@@ -1,6 +1,6 @@
 module Spree
   class DigitalLink < Spree::Base
-    has_secure_token
+    has_secure_token on: :save
 
     if defined?(Spree::Webhooks)
       include Spree::Webhooks::HasWebhooks

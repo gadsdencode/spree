@@ -5,7 +5,7 @@ module Spree
       include Spree::Webhooks::HasWebhooks
     end
 
-    has_secure_token
+    has_secure_token on: :save
 
     belongs_to :user, class_name: "::#{Spree.user_class}", touch: true
     belongs_to :store, class_name: 'Spree::Store'

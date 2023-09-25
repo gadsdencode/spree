@@ -5,7 +5,7 @@ module Spree
         include Spree::VendorConcern
       end
 
-      has_secure_token :secret_key
+      has_secure_token :secret_key, on: :save
 
       has_many :events, inverse_of: :subscriber
 
