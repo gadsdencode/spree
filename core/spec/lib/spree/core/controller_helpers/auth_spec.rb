@@ -55,7 +55,8 @@ describe Spree::Core::ControllerHelpers::Auth, type: :controller do
     end
     it 'sets httponly flag' do
       get :index
-      expect(response['Set-Cookie']).to include('HttpOnly')
+      token_header = response.headers['Set-Cookie'].find { |e| e.starts_with?('token=') }
+      expect(token_header).to include('httponly')
     end
   end
 
