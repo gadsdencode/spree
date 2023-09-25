@@ -65,7 +65,7 @@ describe Spree::Api::Webhooks::StockMovementDecorator do
             stock_location.stock_movements.new.tap do |stock_movement|
               stock_movement.quantity = -1
               stock_movement.stock_item = stock_location.set_up_stock_item(product.variants[0])
-              stock_movement.save
+              stock_movement.save!
             end
           end
 
@@ -78,7 +78,7 @@ describe Spree::Api::Webhooks::StockMovementDecorator do
           stock_location.stock_movements.new.tap do |stock_movement|
             stock_movement.quantity = -1
             stock_movement.stock_item = stock_location.set_up_stock_item(product.variants[0])
-            stock_movement.save
+            stock_movement.save!
           end
           product.reload
         end
@@ -122,7 +122,7 @@ describe Spree::Api::Webhooks::StockMovementDecorator do
             stock_location.stock_movements.new.tap do |stock_movement|
               stock_movement.quantity = 1
               stock_movement.stock_item = stock_location.set_up_stock_item(variant)
-              stock_movement.save
+              stock_movement.save!
             end
             product.reload
           end
