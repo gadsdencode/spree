@@ -31,7 +31,7 @@ RSpec::Matchers.define :emit_webhook_event do |event_to_emit|
     queue_requests = instance_double(Spree::Webhooks::Subscribers::QueueRequests)
 
     allow(Spree::Webhooks::Subscribers::QueueRequests).to receive(:new).and_return(queue_requests)
-    allow(queue_requests).to receive(:call).with(any_args)
+    allow(queue_requests).to receive(:call)
 
     with_webhooks_enabled { Timecop.freeze { block.call } }
 
