@@ -27,18 +27,22 @@
 # way depending on what's the resource being tested.
 #
 RSpec::Matchers.define :emit_webhook_event do |event_to_emit|
+  received_webhook_payload_body = nil
+
   match do |block|
     queue_requests = instance_double(Spree::Webhooks::Subscribers::QueueRequests)
 
     allow(Spree::Webhooks::Subscribers::QueueRequests).to receive(:new).and_return(queue_requests)
-    allow(queue_requests).to receive(:call)
+    allow(queue_requests).to receive(:call) do |args|
+      received_webhook_payload_body = args[:webhook_payload_body]
+    end
 
     with_webhooks_enabled { Timecop.freeze { block.call } }
 
     sleep 10
 
     expect(queue_requests).to(
-      have_received(:call).with(event_name: event_to_emit, webhook_payload_body: anything).once
+      have_received(:call).with(event_name: event_to_emit, webhook_payload_body: webhook_payload_body.to_json).once
     )
   end
 
@@ -51,12 +55,13 @@ RSpec::Matchers.define :emit_webhook_event do |event_to_emit|
     block_def = block_definition(obj_method)
     "Expected that executing `#{block_def}` emits the `#{event_to_emit}` Webhook event.\n" \
       "Check that `#{block_def}` does implement `queue_webhooks_requests!` for " \
-      "`#{event_to_emit}` with the following webhook_payload_body: \n\n#{webhook_payload_body}."
+      "`#{event_to_emit}` with the following webhook_payload_body: \n\n#{webhook_payload_body.to_json}\n" \
+      "Received payload body: \n\n#{received_webhook_payload_body}"
   end
 
   failure_message_when_negated do |obj_method|
     "Expected that executing `#{block_definition(obj_method)}` does not " \
-      "emit the `#{event_to_emit}` Webhook event with the following webhook_payload_body: #{webhook_payload_body}."
+      "emit the `#{event_to_emit}` Webhook event with the following webhook_payload_body: #{webhook_payload_body.to_json}."
   end
 
   supports_block_expectations

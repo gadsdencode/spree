@@ -17,7 +17,7 @@ describe Spree::Api::Webhooks::StockMovementDecorator do
     let!(:variant2) { create(:variant, product: product) }
     let(:webhook_payload_body) do
       Spree::Api::V2::Platform::ProductSerializer.new(
-        product,
+        product.reload,
         include: Spree::Api::V2::Platform::ProductSerializer.relationships_to_serialize.keys
       ).serializable_hash
     end
@@ -96,6 +96,7 @@ describe Spree::Api::Webhooks::StockMovementDecorator do
             stock_movement.save
           end
           product.reload
+          Rails.cache.clear
         end
 
         before do
@@ -125,6 +126,7 @@ describe Spree::Api::Webhooks::StockMovementDecorator do
               stock_movement.save!
             end
             product.reload
+            Rails.cache.clear
           end
 
           it { expect { subject }.to emit_webhook_event(event_name) }
