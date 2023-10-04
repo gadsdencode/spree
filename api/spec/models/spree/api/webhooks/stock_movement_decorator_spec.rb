@@ -67,6 +67,7 @@ describe Spree::Api::Webhooks::StockMovementDecorator do
               stock_movement.stock_item = stock_location.set_up_stock_item(product.variants[0])
               stock_movement.save!
             end
+            Rails.cache.clear
           end
 
           it { expect { subject }.to emit_webhook_event(event_name) }
@@ -81,6 +82,7 @@ describe Spree::Api::Webhooks::StockMovementDecorator do
             stock_movement.save!
           end
           product.reload
+          Rails.cache.clear
         end
 
         before { product.variants[0].stock_items[0].set_count_on_hand(1) }
